@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/output.css')}}">
+</head>
+
+<body class="bg-primary min-h-screen">
+    <div id="wrapper" class="relative animate-fade-up">
+        <!-- Navbar -->
+        <nav id="navbar"
+            class="p-4 m-5 max-w-[90%] mx-auto bg-secondary text-white flex justify-between items-center rounded-full shadow-md">
+            <!-- Toggle Button -->
+            <button id="menu-btn" class="p-2 mx-2 z-50 bg-gray-300 rounded-md lg:hidden" aria-label="Toggle menu">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+
+            <!-- Logo -->
+            <div class="text-2xl font-bold tracking-wide">
+                <span class="text-primarybutton px-2 rounded-sm">My Logo</span>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden lg:flex items-center">
+                <ul class="flex space-x-8 text-lg font-medium">
+                    <li>
+                        <a href="#" class="text-primarytext rounded-full hover:bg-primarybutton hover:rounded-full px-4 py-2 transition-colors duration-100 ease-in-out">About</a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="text-primarytext rounded-full hover:bg-primarybutton hover:rounded-full px-4 py-2 transition-colors duration-100 ease-in-out">Products</a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="text-primarytext rounded-full hover:bg-primarybutton hover:rounded-full px-4 py-2 transition-colors duration-100 ease-in-out">Reviews</a>
+                    </li>
+                    <li>
+                        <a href="#" class="text-primarytext rounded-full hover:bg-primarybutton hover:rounded-full px-4 py-2 transition-colors duration-100 ease-in-out">Cart</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- LMS Button -->
+            <a href="#"
+                class="bg-primarybutton text-white px-6 py-2 rounded-full font-semibold hover:bg-orange-500 transition-colors duration-200">
+                LMS
+            </a>
+        </nav>
+
+        <!-- Sidebar -->
+        <div id="sidebar"
+            class="fixed top-0 left-0 h-screen w-64 bg-secondary shadow-md transition-transform duration-300 ease-in-out transform -translate-x-full lg:hidden z-50">
+            <div class="p-6">
+                <h2 class="text-2xl font-bold text-gray-700">Bright Career Path</h2>
+                <hr class="my-6 border-gray-400" />
+                <ul class="space-y-4">
+                    <li>
+                        <a href="#"
+                            class="block rounded-md text-primarytext font-semibold hover:bg-primarybutton hover:rounded-md p-3 transition-colors duration-100 ease-in-out">About</a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="block rounded-md text-primarytext font-semibold hover:bg-primarybutton hover:rounded-md p-3 transition-colors duration-100 ease-in-out">Products</a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="block rounded-md text-primarytext font-semibold hover:bg-primarybutton hover:rounded-md p-3 transition-colors duration-100 ease-in-out">Reviews</a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="block rounded-md text-primarytext font-semibold hover:bg-primarybutton hover:rounded-md p-3 transition-colors duration-100 ease-in-out">Cart</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Overlay for Mobile Sidebar -->
+        <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden lg:hidden z-40"></div>
+    </div>
+
+    <!-- This is Main Contant Area -->
+    {% block content %}
+    <!-- All outside of This block content render where it can be extended code write. -->
+
+
+    {% endblock %}
+
+    <!-- Footer -->
+
+
+
+    <!--js-->
+    <script>
+        const menuBtn = document.getElementById("menu-btn");
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+
+        let isOpen = false;
+
+        menuBtn.addEventListener("click", (e) => {
+            e.stopPropagation(); // Prevent click from bubbling to document
+            toggleSidebar();
+        });
+
+        overlay.addEventListener("click", () => {
+            closeSidebar();
+        });
+
+        document.addEventListener("click", (event) => {
+            if (
+                !sidebar.contains(event.target) &&
+                !menuBtn.contains(event.target) &&
+                isOpen
+            ) {
+                closeSidebar();
+            }
+        });
+
+        function toggleSidebar() {
+            isOpen = !isOpen;
+            sidebar.classList.toggle("-translate-x-full");
+            overlay.classList.toggle("hidden");
+        }
+
+        function closeSidebar() {
+            isOpen = false;
+            sidebar.classList.add("-translate-x-full");
+            overlay.classList.add("hidden");
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+</body>
+
+</html>
