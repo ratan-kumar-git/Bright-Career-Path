@@ -6,14 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
     <link rel="stylesheet" href="{{url_for('static', filename='css/output.css')}}">
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
 </head>
 
 <body class="bg-primary min-h-screen">
     <!-- Navbar -->
     <nav id="navbar"
-        class="p-4 m-5 max-w-[90%] mx-auto bg-secondary text-white flex justify-between items-center rounded-full shadow-md z-40 relative">
+        class="p-4 m-5 max-w-[90%] mx-auto bg-secondary text-primarytext flex justify-between items-center rounded-full shadow-md z-40 relative">
         <!-- Toggle Button -->
-        <button data-drawer-target="drawer-navigation" data-drawer-toggle="drawer-navigation" id="menu-btn"
+        <button data-drawer-target="drawer-navigation" data-drawer-toggle="drawer-navigation"
             class="p-2 mx-2 z-50 bg-gray-300 rounded-md lg:hidden" aria-label="Toggle menu">
             <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 6h16M4 12h16M4 18h16" />
@@ -21,24 +22,26 @@
         </button>
 
         <!-- Logo -->
-        <div class="text-2xl font-bold tracking-wide">
-            <span class="text-primarybutton px-2 rounded-sm">My Logo</span>
+        <div class="text-base md:text-xl lg:text-2xl font-bold tracking-wide">
+            <a href="/">
+                <span class="text-primarybutton px-2 rounded-sm">Bright Career Path</span>
+            </a>
         </div>
 
         <!-- Desktop Menu -->
         <div class="hidden lg:flex items-center">
-            <ul class="flex space-x-8 text-lg font-medium">
-                <li><a href="#"
-                        class="text-primarytext rounded-full hover:bg-primarybutton px-4 py-2 transition-colors duration-100">About</a>
+            <ul class="flex gap-10 text-lg font-medium">
+                <li><a href="/"
+                        class="text-primarytext rounded-full {% if title=='Home | Bright Career Path' %}bg-primarybutton {% endif %} hover:bg-primarybutton px-4 py-2 transition-colors duration-100">Home</a>
                 </li>
-                <li><a href="#"
-                        class="text-primarytext rounded-full hover:bg-primarybutton px-4 py-2 transition-colors duration-100">Products</a>
+                <li><a href="/services"
+                        class="text-primarytext rounded-full {% if title=='Our Services' %}bg-primarybutton {% endif %} hover:bg-primarybutton px-4 py-2 transition-colors duration-100">Services</a>
                 </li>
-                <li><a href="#"
-                        class="text-primarytext rounded-full hover:bg-primarybutton px-4 py-2 transition-colors duration-100">Reviews</a>
+                <li><a href="/about"
+                        class="text-primarytext rounded-full {% if title=='About' %}bg-primarybutton {% endif %} hover:bg-primarybutton px-4 py-2 transition-colors duration-100">About</a>
                 </li>
-                <li><a href="#"
-                        class="text-primarytext rounded-full hover:bg-primarybutton px-4 py-2 transition-colors duration-100">Cart</a>
+                <li><a href="/contact"
+                        class="text-primarytext rounded-full {% if title=='Contact' %}bg-primarybutton {% endif %} hover:bg-primarybutton px-4 py-2 transition-colors duration-100">Contact</a>
                 </li>
             </ul>
         </div>
@@ -52,22 +55,24 @@
 
     <!-- Sidebar -->
     <aside id="drawer-navigation"
-        class="fixed top-0 left-0 mt-0 z-40 h-screen w-64 bg-secondary transition-transform -translate-x-full md:translate-x-0 shadow-md  lg:hidden">
+        class="fixed top-0 left-0 mt-0 z-40 h-screen w-64 bg-secondary transition-transform -translate-x-full shadow-md lg:hidden">
         <div class="p-6">
-            <h2 class="text-2xl font-bold text-gray-700">Bright Career Path</h2>
+            <a href="/">
+                <h2 class="text-2xl font-bold text-gray-700">Bright Career Path</h2>
+            </a>
             <hr class="my-6 border-gray-400" />
             <ul class="space-y-4">
-                <li><a href="#"
-                        class="block rounded-md text-primarytext font-semibold hover:bg-primarybutton p-3 transition-colors duration-100">About</a>
+                <li><a href="/"
+                        class="block rounded-md text-primarytext font-semibold {% if title=='Home | Bright Career Path' %} bg-primarybutton {% endif %} hover:bg-primarybutton p-3 transition-colors duration-100">Home</a>
                 </li>
-                <li><a href="#"
-                        class="block rounded-md text-primarytext font-semibold hover:bg-primarybutton p-3 transition-colors duration-100">Products</a>
+                <li><a href="/services"
+                        class="block rounded-md text-primarytext font-semibold {% if title=='Our Services' %}bg-primarybutton {% endif %} hover:bg-primarybutton p-3 transition-colors duration-100">Services</a>
                 </li>
-                <li><a href="#"
-                        class="block rounded-md text-primarytext font-semibold hover:bg-primarybutton p-3 transition-colors duration-100">Reviews</a>
+                <li><a href="/about"
+                        class="block rounded-md text-primarytext font-semibold {% if title=='About' %}bg-primarybutton {% endif %} hover:bg-primarybutton p-3 transition-colors duration-100">About</a>
                 </li>
-                <li><a href="#"
-                        class="block rounded-md text-primarytext font-semibold hover:bg-primarybutton p-3 transition-colors duration-100">Cart</a>
+                <li><a href="/contact"
+                        class="block rounded-md text-primarytext font-semibold {% if title=='Contact' %}bg-primarybutton {% endif %} hover:bg-primarybutton p-3 transition-colors duration-100">Contact</a>
                 </li>
             </ul>
         </div>

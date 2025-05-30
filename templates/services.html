@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1 class="text-center text-xl">Page under Development</h1>
+<!-- Our Servises -->
+<section class="bg-primary mx-auto md:mx-5 max-w-full mb-10 animate-fade-up">
+    <h1 class="animate-bounce animate-infinite text-center text-3xl md:text-4xl lg:text-5xl py-10 font-serif font-extrabold">Our Services</h1>
+    <div class="flex justify-center items-center animate-fade-up animate-delay-500">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-10 px-5">
+            <!-- Card Start -->
+            {% for service in services %}
+            <div
+                class="hover:animate-fade-up hover:animate-delay-400 max-w-sm bg-secondary border border-primarytext rounded-lg shadow-xl">
+                <a href="#">
+                    <img class="rounded-t-lg" src="{{ url_for('static', filename=service.image) }}" alt="" />
+                </a>
+                <div class="p-5">
+                    <a href="#">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-primarytext">{{ service.title }}</h5>
+                    </a>
+                    <p class="mb-3 font-normal text-primarytext line-clamp-3">{{ service.description }}</p>
+                    <a href="#"
+                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primarybutton rounded-lg">View
+                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M1 5h12m0 0L9 1m4 4L9 9" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}
