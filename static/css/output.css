@@ -746,22 +746,6 @@ video {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-@keyframes fade-up {
-  0% {
-    opacity: 0;
-    transform: translateY(2rem);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-up {
-  animation: fade-up var(--default-animation-duration, 1s) var(--default-animation-timing-function, ease) var(--default-animation-delay, 0s) both;
-}
-
 @keyframes bounce {
   0%, 100% {
     transform: translateY(-25%);
@@ -776,6 +760,22 @@ video {
 
 .animate-bounce {
   animation: bounce var(--default-animation-duration, 1s) var(--default-animation-timing-function, ease) var(--default-animation-delay, 0s) infinite;
+}
+
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up var(--default-animation-duration, 1s) var(--default-animation-timing-function, ease) var(--default-animation-delay, 0s) both;
 }
 
 .grid-cols-1 {
@@ -1062,106 +1062,8 @@ video {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.animate-delay-500 {
-  animation-delay: 500ms;
-}
-
-.animate-delay-200 {
-  animation-delay: 200ms;
-}
-
 .animate-infinite {
   animation-iteration-count: infinite;
-}
-
-@keyframes pulse {
-  50% {
-    opacity: .5;
-  }
-}
-
-.hover\:animate-pulse:hover {
-  animation: pulse var(--default-animation-duration, 2s) var(--default-animation-timing-function, cubic-bezier(0.4, 0, 0.6, 1)) var(--default-animation-delay, 0s) infinite;
-}
-
-@keyframes wiggle {
-  0%, 100% {
-    transform: rotate(-3deg);
-  }
-
-  50% {
-    transform: rotate(3deg);
-  }
-}
-
-.hover\:animate-wiggle:hover {
-  animation: wiggle var(--default-animation-duration, 1s) var(--default-animation-timing-function, ease) var(--default-animation-delay, 0s) both;
-}
-
-@keyframes jump-out {
-  0% {
-    transform: scale(1);
-  }
-
-  20% {
-    transform: scale(1.2);
-  }
-
-  100% {
-    transform: scale(0);
-  }
-}
-
-.hover\:animate-jump-out:hover {
-  animation: jump-out var(--default-animation-duration, 0.5s) var(--default-animation-timing-function, ease) var(--default-animation-delay, 0s) both;
-}
-
-@keyframes jump-in {
-  0% {
-    transform: scale(0);
-  }
-
-  80% {
-    transform: scale(1.2);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-
-.hover\:animate-jump-in:hover {
-  animation: jump-in var(--default-animation-duration, 0.5s) var(--default-animation-timing-function, ease) var(--default-animation-delay, 0s) both;
-}
-
-@keyframes fade {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-.hover\:animate-fade:hover {
-  animation: fade var(--default-animation-duration, 1s) var(--default-animation-timing-function, ease) var(--default-animation-delay, 0s) both;
-}
-
-@keyframes fade-left {
-  0% {
-    opacity: 0;
-    transform: translateX(2rem);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.hover\:animate-fade-left:hover {
-  animation: fade-left var(--default-animation-duration, 1s) var(--default-animation-timing-function, ease) var(--default-animation-delay, 0s) both;
 }
 
 @keyframes fade-up {
@@ -1180,6 +1082,20 @@ video {
   animation: fade-up var(--default-animation-duration, 1s) var(--default-animation-timing-function, ease) var(--default-animation-delay, 0s) both;
 }
 
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(-3deg);
+  }
+
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+.hover\:animate-wiggle:hover {
+  animation: wiggle var(--default-animation-duration, 1s) var(--default-animation-timing-function, ease) var(--default-animation-delay, 0s) both;
+}
+
 .hover\:rounded-full:hover {
   border-radius: 9999px;
 }
@@ -1195,10 +1111,6 @@ video {
 
 .hover\:animate-delay-200:hover {
   animation-delay: 200ms;
-}
-
-.hover\:animate-fill-backwards:hover {
-  animation-fill-mode: backwards;
 }
 
 .hover\:animate-infinite:hover {
