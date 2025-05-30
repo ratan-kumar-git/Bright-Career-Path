@@ -18,7 +18,13 @@ def index():
         {'title': 'Summer & Winter Camps', 'description': 'Our seasonal camps offer a perfect mix of learning and fun through hands-on workshops, creative activities, sports, and life skills training—helping students explore new interests and grow holistically.', 'image': 'images/summer-winter-camps.jpg'},
         
     ]
-    return render_template('home.html', title='Home | Bright Career Path', services=services)
+    contacts = [
+        {'head_office_address': 'Mohaddiganj, Sasaram, Rohtas, Bihar', 'branch_office_address': 'Vijay Nagar, Indore, Madhya Pradesh', 'mob_no': '+91 7870767779', 'email': 'omtusharsingh78@gmail.com'}
+    ]
+    social_links = [
+        {'insta': '#', 'fb': '#', 'yt': '#'}
+    ]
+    return render_template('home.html', title='Home | Bright Career Path', services=services, contacts=contacts, social_links=social_links)
 
 # Services Page
 @app.route('/services')

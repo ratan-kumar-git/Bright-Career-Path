@@ -7,12 +7,13 @@
     <title>{{title}}</title>
     <link rel="stylesheet" href="{{url_for('static', filename='css/output.css')}}">
     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body class="bg-primary min-h-screen">
     <!-- Navbar -->
     <nav id="navbar"
-        class="p-4 m-5 max-w-[90%] mx-auto bg-secondary text-primarytext flex justify-between items-center rounded-full shadow-md z-40 relative">
+        class="animate-fade-down p-4 m-5 max-w-[90%] mx-auto bg-secondary text-primarytext flex justify-between items-center rounded-full shadow-md z-40 relative">
         <!-- Toggle Button -->
         <button data-drawer-target="drawer-navigation" data-drawer-toggle="drawer-navigation"
             class="p-2 mx-2 z-50 bg-gray-300 rounded-md lg:hidden" aria-label="Toggle menu">
@@ -48,7 +49,7 @@
 
         <!-- LMS Button -->
         <a href="#"
-            class="bg-primarybutton text-white px-6 py-2 rounded-full font-semibold hover:bg-orange-500 transition-colors duration-200">
+            class="text-white bg-primarytext px-6 py-2 rounded-full font-semibold hover:bg-orange-500 transition-colors duration-200">
             LMS
         </a>
     </nav>
@@ -77,12 +78,71 @@
             </ul>
         </div>
     </aside>
-    
+
     <main>
         {% block content %}
         {% endblock %}
     </main>
-    
+
+    <!-- Footer -->
+    <footer class="bg-black text-white px-6 py-12">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+
+            <!-- Logo + Description -->
+            <div>
+                <h2 class="text-2xl font-semibold text-cyan-400">Bright Career Path</h2>
+                <p class="mt-2 text-gray-300">Empowering Education & Careers through Smart Solutions and Services.</p>
+            </div>
+
+            <!-- Online Platform -->
+            <div>
+                <h3 class="font-bold text-white mb-2">Online Platform</h3>
+                <ul class="space-y-1 text-gray-300">
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="/services">Services</a></li>
+                </ul>
+            </div>
+
+            <!-- Links -->
+            <div>
+                <h3 class="font-bold text-white mb-2">Links</h3>
+                <ul class="space-y-1 text-gray-300">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Refund Policy</a></li>
+                    <li><a href="#">Terms & Conditions</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Info -->
+            <div>
+                <h3 class="font-bold text-white mb-2">Contact</h3>
+                <p class="text-gray-300"><strong>Head Office Address:</strong> Mohaddiganj, Sasaram, Rohtas, Bihar</p>
+                <p class="text-gray-300"><strong>Branch Office Address:</strong> Vijay Nagar, Indore, Madhya Pradesh</p>
+                <p class="text-gray-300"><strong>Call:</strong> +91 7870767779</p>
+                <p class="text-gray-300"><strong>Email:</strong> omtusharsingh78@gmail.com</p>
+                <div class="flex space-x-4 mt-3 text-xl">
+                    <a href="#" class="text-blue-500"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-pink-500"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-red-600"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Strip -->
+        <div class="mt-10 border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
+            © 2025 <span class="text-cyan-400">Bright Career Path</span>. Designed by <span
+                class="text-green-400">YourDesign</span>. All Rights Reserved.
+        </div>
+
+        <!-- Back to Top Button -->
+        <div class="fixed bottom-6 right-4">
+            <a href="#top" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-3 rounded-full shadow-lg">
+                <i class="fa-solid fa-angle-up"></i>
+            </a>
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 </body>
 

@@ -1,7 +1,73 @@
 {% extends 'layout.html' %}
 {% block content %}
-<h1 class="text-center text-3xl">Contact Us Page</h1>
-<h1 class="text-center text-xl">Page under Development</h1>
+<section class="bg-primary py-8 md:py-16 px-6" id="contact">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-start">
 
+        <!-- Left: Contact Info -->
+        <div>
+            <h2 class="text-3xl font-bold text-black mb-6 animate-fade-up">We're Always Eager to Hear From You!</h2>
+            <div class="space-y-6 text-gray-700 animate-fade-up">
+                <div>
+                    <h4 class="font-semibold text-black">Address</h4>
+                    <p><strong>Head Office</strong><br>Mohaddiganj, Sasaram, Rohtas, Bihar</p>
+                    <p class="mt-2"><strong>Branch Office</strong><br>BVijay Nagar, Indore, Madhya Pradesh</p>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold text-black">Email</h4>
+                    <p>omtusharsingh78@gmail.com</p>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold text-black">Phone</h4>
+                    <p>+91 7870767779</p>
+                </div>
+
+                <div class="flex space-x-3 pt-4">
+                    <a href="#"
+                        class="w-9 h-9 flex items-center justify-center border rounded-full text-gray-600 hover:text-blue-600">
+                        <i class="fas fa-share-alt"></i>
+                    </a>
+                    <a href="#"
+                        class="w-9 h-9 flex items-center justify-center border rounded-full text-gray-600 hover:text-blue-600">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#"
+                        class="w-9 h-9 flex items-center justify-center border rounded-full text-gray-600 hover:text-blue-400">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#"
+                        class="w-9 h-9 flex items-center justify-center border rounded-full text-gray-600 hover:text-blue-700">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Form -->
+        <div class="bg-white rounded-lg shadow-md p-8 animate-fade-up">
+            <h3 class="text-2xl font-semibold mb-2">Get In Touch</h3>
+            <p class="text-gray-500 mb-6">Fill out this form for booking a consultant advising session.</p>
+
+            <form action="" class="space-y-4">
+                <input type="text" placeholder="Your name" required
+                    class="w-full border-b border-secondary p-2 focus:outline-none focus:border-green-500" />
+                <input type="email" placeholder="Enter your email" required
+                    class="w-full border-b border-secondary p-2 focus:outline-none focus:border-green-500" />
+                <input type="tel" id="phone" name="phone" placeholder="10 Digit Mobile Number" pattern="[0-9]{10}"
+                    maxlength="10" inputmode="numeric" required
+                    class="w-full border-b border-secondary p-2 focus:outline-none focus:border-green-500" />
+                <textarea placeholder="Your message" required
+                    class="w-full border-b border-secondary p-2 h-28 resize-none focus:outline-none focus:border-green-500"></textarea>
+
+                <button type="submit"
+                    class="bg-primarytext hover:text-primarybutton text-white px-6 py-2 rounded-md flex items-center space-x-2">
+                    <span>Submit Message</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
 
 {% endblock %}

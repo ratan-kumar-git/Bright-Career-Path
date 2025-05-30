@@ -1,5 +1,30 @@
 {% extends 'layout.html' %}
 {% block content %}
-<h1 class="text-center text-3xl">About Page</h1>
-<h1 class="text-center text-xl">Page under Development</h1>
+<section class="bg-primary py-12 px-6 md:px-20">
+    <div class="max-w-5xl mx-auto flex flex-col items-center md:space-x-12 animate-fade-up">
+        <!-- Image Placeholder -->
+        <div class="w-40 h-40 rounded-full overflow-hidden shadow-lg mb-6 md:mb-0">
+            <img src="{{url_for('static', filename='images/user.png')}}" alt="Tushar Singh" class="w-full h-full object-cover" />
+        </div>
+
+        <!-- Text Content -->
+        <div class="text-center">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4 md:mr-12">Tushar Singh</h2>
+            <p class="text-lg text-gray-700 mb-4">
+                <span class="font-semibold">Bachelor: </span>Bachelor of Arts in English
+            </p>
+            <p class="text-lg text-gray-700 mb-4">
+                <span class="font-semibold">Currently: </span>Pursuing LLB from Himalaya University, Patna, Bihar.
+            </p>
+            <p class="text-base text-gray-600 leading-relaxed">
+                Our ambition is to secure a bright future for candidates and students by helping them achieve jobs in
+                the digital era of our New Bharat, as envisioned by our <strong>Hon’ble Prime Minister Shri Narendra Modi</strong>.
+                <br class="my-2">
+                <span class="font-semibold text-green-600">Our Motive: Digital India</span>
+            </p>
+        </div>
+    </div>
+</section>
+
+
 {% endblock %}
