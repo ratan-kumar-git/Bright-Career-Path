@@ -40,6 +40,7 @@
     <div class="flex justify-center items-center animate-fade-up animate-delay-500">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-10 px-5">
             <!-- Card Start -->
+             {% if len(services) >= 1 %}
             {% for service in services %}
             <div
                 class="hover:animate-fade-up hover:animate-delay-400 max-w-sm bg-secondary border border-primarytext rounded-lg shadow-xl">
@@ -51,7 +52,7 @@
                         <h5 class="mb-2 text-2xl font-bold tracking-tight text-primarytext">{{ service.title }}</h5>
                     </a>
                     <p class="mb-3 font-normal text-primarytext line-clamp-3">{{ service.description }}</p>
-                    <a href="#"
+                    <a href="/services/{{service.url}}"
                         class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primarybutton rounded-lg">View
                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
@@ -62,6 +63,9 @@
                 </div>
             </div>
             {% endfor %}
+            {% else %}
+                <h1 class="col-span-3 animate-pulse animate-infinite text-center text-xl md:text-2xl lg:text-3xl py-10 font-mono">Data Not Found</h1>
+            {% endif %}
         </div>
     </div>
 </section>
