@@ -11,15 +11,16 @@
             <div
                 class="hover:animate-fade-up hover:animate-delay-400 max-w-sm bg-secondary border border-primarytext rounded-lg shadow-xl">
                 <a href="#">
-                    <img class="rounded-t-lg" src="{{ url_for('static', filename=service.image) }}" alt="" />
+                    <img class="rounded-t-lg" src="{{ url_for('static', filename=service.img_filename) }}" alt="image" />
                 </a>
                 <div class="p-5">
                     <a href="#">
                         <h5 class="mb-2 text-2xl font-bold tracking-tight text-primarytext">{{ service.title }}</h5>
                     </a>
-                    <p class="mb-3 font-normal text-primarytext line-clamp-3">{{ service.description }}</p>
+                    <p class="mb-3 font-normal text-primarytext line-clamp-3">{{ service.short_description }}</p>
                     <a href="/services/{{service.url}}"
-                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primarybutton rounded-lg">View
+                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white hover:text-primarytext bg-primarybutton rounded-lg">
+                        View
                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

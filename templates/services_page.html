@@ -1,67 +1,40 @@
 {% extends 'layout.html' %}
 {% block content %}
-
 <h1
-    class="animate-bounce animate-infinite text-center text-3xl md:text-4xl lg:text-5xl py-10 font-serif font-extrabold">
-    {{ services.title }}
+    class="text-primarytext animate-bounce animate-infinite text-center text-3xl md:text-4xl lg:text-5xl py-10 font-serif font-extrabold">
+    {{ services_page_data.title }}
 </h1>
+
+<!-- Description Area -->
+<section class="bg-primary mx-auto md:mx-5 max-w-full mb-10 animate-fade-up">
+    <h1
+        class="text-primarytext px-5 md:px-10 text-left text-xl md:text-2xl lg:text-3xl pb-3 font-serif font-extrabold">
+        Description: 
+    </h1>
+    <p class="text-primarytext text-justify text-xl md:text-2xl px-5 md:px-10 font-serif">
+        {{ services_page_data.description }}
+    </p>
+</section>
+
 <!-- Photo Section -->
 <section class="bg-primary mx-auto md:mx-5 max-w-full mb-10 animate-fade-up">
     <h1
-        class="px-5 md:px-10 animate-infinite text-center text-2xl md:text-3xl lg:text-4xl py-10 font-serif font-extrabold">
+        class="text-primarytext px-5 md:px-10 animate-infinite text-center text-2xl md:text-3xl lg:text-4xl py-10 font-serif font-extrabold">
         Photos
     </h1>
     <div class="flex justify-center items-center animate-fade-up animate-delay-500">
         <!-- Photo Area -->
         <div class="px-5 md:px-10 grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div>
-                <img class="h-auto max-w-full rounded-lg"
-                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image.jpg" alt="">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg"
-                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg" alt="">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg"
-                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg" alt="">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg"
-                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-3.jpg" alt="">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg"
-                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg" alt="">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg"
-                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-5.jpg" alt="">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg"
-                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-6.jpg" alt="">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg"
-                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-7.jpg" alt="">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg"
-                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-8.jpg" alt="">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg"
-                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-9.jpg" alt="">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg"
-                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-10.jpg" alt="">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg"
-                    src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image-11.jpg" alt="">
-            </div>
+            {% if len(services_page_img) >= 1 %}
+                {% for img in services_page_img %}
+                <div>
+                    <img class="hover:animate-fade-up h-auto max-w-full rounded-lg" src="{{ url_for('static', filename=img.img_filename) }}"
+                        alt="">
+                </div>
+                {% endfor %}
+            {% else %}
+                <h1 class="col-span-3 animate-pulse animate-infinite text-center text-xl md:text-2xl lg:text-3xl py-10 font-mono">Data Not Found</h1>
+            {% endif %}
         </div>
     </div>
 </section>
@@ -69,17 +42,25 @@
 <!-- Video Section -->
 <section class="bg-primary mx-auto md:mx-5 max-w-full mb-10 animate-fade-up ">
     <h1
-        class="px-5 md:px-10 animate-infinite text-center text-2xl md:text-3xl lg:text-4xl py-10 font-serif font-extrabold">
+        class="text-primarytext px-5 md:px-10 animate-infinite text-center text-2xl md:text-3xl lg:text-4xl py-10 font-serif font-extrabold">
         Videos
     </h1>
     <div class="flex justify-center items-center animate-fade-up animate-delay-500">
         <!-- Videos Area -->
-        <div class="px-5 md:px-10 grid grid-cols-2 md:grid-cols-3 gap-4 w-full">
-            {% for video in videos %}
-            <div class="w-full aspect-w-16 aspect-h-9 rounded-lg">
-                {{video.yt_video | safe}}
-            </div>
-            {% endfor %}
+        <div class="px-5 md:px-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
+            {% if len(services_page_video) >= 1 %}
+                {% for vid in services_page_video %}
+                <div class="w-full aspect-w-16 aspect-h-9 rounded-lg">
+                    <iframe class="rounded-lg w-full h-full" src="{{vid.yt_embed_link}}"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                    </iframe>
+                </div>
+                {% endfor %}
+            {% else %}
+                <h1 class="col-span-3 animate-pulse animate-infinite text-center text-xl md:text-2xl lg:text-3xl py-10 font-mono">Data Not Found</h1>
+            {% endif %}
         </div>
     </div>
 </section>
