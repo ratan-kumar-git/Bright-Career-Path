@@ -1,0 +1,163 @@
+{% extends 'admin/layout.html' %}
+{% block content %}
+
+<h1 class="animate-bounce animate-infinite text-center text-2xl md:text-3xl lg:text-4xl py-5 font-serif font-extrabold">
+    {{service_data.title}}
+</h1>
+
+<!-- Notification -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div id="alert-1" class="mx-5 md:mx-10 flex items-center px-4 py-3 mb-4 text-primarytext rounded-lg bg-primarybutton"
+    role="alert">
+    <div class="ms-3 text-sm font-medium">
+        {{message}}
+    </div>
+    <button type="button"
+        class="ms-auto -mx-1.5 -my-1.5 text-white bg-secondary hover:bg-primarytext rounded-lg p-1.5 inline-flex items-center justify-center h-8 w-8"
+        data-dismiss-target="#alert-1" aria-label="Close">
+        ❌
+    </button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<!-- Update Title & Description of Services  -->
+<section class="bg-primary mx-auto md:mx-5 max-w-full mb-10 animate-fade-up">
+    <div class="px-5 md:px-10 grid grid-cols-1 gap-10">
+        <form action="{{ url_for('update_desc_service', id=service_data.id) }}" method="post">
+            <div class="mt-4">
+                <label for="Service Title" class="block mb-2 text-sm font-medium text-primarytext">Service
+                    Title</label>
+                <input type="text" name="title" maxlength="100" value="{{service_data.title}}"
+                    class="bg-secondary border border-gray-300 text-primarytext text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    placeholder="Service Title" required="">
+            </div>
+            <div class="mt-4">
+                <label for="short_description" class="block mb-2 text-sm font-medium text-primarytext">Short
+                    Description</label>
+                <textarea rows="4" id="sas" name="description"
+                    class="block p-2.5 w-full text-sm text-primarytext bg-secondary rounded-lg"
+                    placeholder="Write Service Description here">{{service_data.description}}</textarea>
+            </div>
+            <button type="submit"
+                class="mt-4 text-primarytext hover:text-white inline-flex items-center bg-primarybutton font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                Update
+            </button>
+        </form>
+    </div>
+</section>
+
+<!-- Upload Image & Video of Services  -->
+<section class="bg-primary mx-auto md:mx-5 max-w-full mb-10 animate-fade-up">
+    <div class="px-5 md:px-10 grid grid-cols-1 md:grid-cols-4 gap-10">
+        <!-- Image Upload -->
+        <div class="sm:col-span-2">
+            <form action="{{ url_for('upload_img_service', description_id=service_data.id) }}" method="post"
+                enctype="multipart/form-data">
+                <label for="file_input" class="block mb-2 text-sm font-medium text-primarytext">
+                    Upload Image</label>
+                <input
+                    class="block w-full text-sm text-primarytext border border-gray-300 rounded-lg cursor-pointer bg-secondary "
+                    id="file_input" name="img_filename" type="file">
+
+                <button type="submit"
+                    class="mt-5 text-primarytext hover:text-white inline-flex items-center bg-primarybutton font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                    Upload Image
+                </button>
+            </form>
+        </div>
+
+        <!-- Video link Add -->
+        <div class="sm:col-span-2">
+            <form action="{{ url_for('upload_video_service', description_id=service_data.id) }}" method="post">
+                <label for="YouTube Embed Link" class="block mb-2 text-sm font-medium text-primarytext">
+                    YouTube Embed Link</label>
+                <input type="text" name="yt_embed_link" maxlength="500"
+                    class="bg-secondary border border-gray-300 text-primarytext text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    placeholder="YouTube Embed Link" required="">
+
+                <button type="submit"
+                    class="mt-5 text-primarytext hover:text-white inline-flex items-center bg-primarybutton font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                    Add YouTube Link
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Photo Delete Section -->
+<section class="bg-primary mx-auto md:mx-5 max-w-full mb-10 animate-fade-up">
+    <h1
+        class="text-primarytext px-5 md:px-10 animate-infinite text-center text-2xl md:text-3xl lg:text-4xl py-10 font-serif font-extrabold">
+        Photos
+    </h1>
+    <div class="flex justify-center items-center animate-fade-up animate-delay-500">
+        <!-- Photo Area -->
+        <div class="px-5 md:px-10 grid grid-cols-2 md:grid-cols-3 gap-4">
+            {% if len(img_service_data) >= 1 %}
+            {% for img in img_service_data %}
+            <div>
+                <img class="hover:animate-fade-up h-auto max-w-full rounded-lg"
+                    src="{{ url_for('static', filename=img.img_filename) }}" alt="image">
+
+                <div class="mx-auto my-2 flex justify-center items-center">
+                    <form action="{{ url_for('delete_img_service', id=img.id) }}" method="POST">
+                        <button type="submit" class="px-4 py-2 bg-red text-primary hover:text-black rounded-md"
+                            onclick="return confirm('Are you sure you want to delete this Image?');">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <h1
+                class="col-span-3 animate-pulse animate-infinite text-center text-xl md:text-2xl lg:text-3xl py-10 font-mono">
+                Data Not Found</h1>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Video Delete Section -->
+<section class="bg-primary mx-auto md:mx-5 max-w-full mb-10 animate-fade-up ">
+    <h1
+        class="text-primarytext px-5 md:px-10 animate-infinite text-center text-2xl md:text-3xl lg:text-4xl py-10 font-serif font-extrabold">
+        Videos
+    </h1>
+    <div class="flex justify-center items-center animate-fade-up animate-delay-500">
+        <!-- Videos Area -->
+        <div class="px-5 md:px-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
+            {% if len(video_service_data) >= 1 %}
+            {% for vid in video_service_data %}
+            <div>
+                <div class="w-full aspect-w-16 aspect-h-9 rounded-lg">
+                    <iframe class="rounded-lg w-full h-full" src="{{vid.yt_embed_link}}" title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="mx-auto my-2 flex justify-center items-center">
+                    <form action="{{ url_for('delete_video_service', id=vid.id) }}" method="post">
+                        <button type="submit" class="px-4 py-2 bg-red text-primary hover:text-black rounded-md"
+                            onclick="return confirm('Are you sure you want to delete this Image?');">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <h1
+                class="col-span-3 animate-pulse animate-infinite text-center text-xl md:text-2xl lg:text-3xl py-10 font-mono">
+                Data Not Found</h1>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 import bcrypt
 from werkzeug.utils import secure_filename
 import os
+import re
 
 
 app = Flask(__name__)
@@ -20,6 +21,11 @@ app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5MB max size
 def allowed_file(filename):
     allowed_extensions = {'png', 'jpg', 'jpeg'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
+
+def slugify(text):
+    text = text.strip().lower().replace(' ', '_')
+    return re.sub(r'[^a-z_]', '', text)
+
 
 # Admin Table
 class Admin(db.Model):
@@ -98,11 +104,6 @@ def services_page(name):
 
     services_page_img = ServiceImage.query.filter_by(description_id=services_page_data.id).all()
     services_page_video = ServiceVideo.query.filter_by(description_id=services_page_data.id).all()
-    for img in services_page_img:
-        print("Image:", img.img_filename)
-
-    for vid in services_page_video:
-        print("Video:", vid.yt_embed_link)
 
     return render_template(
         'services_page.html', 
@@ -150,7 +151,7 @@ def admin_logout():
     session.pop('admin_id', None)
     return redirect(url_for('admin_login'))
 
-# Admin Dashboard
+# Admin Dashboard + Shows all Services
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_dashboard():
     if 'admin_id' not in session:
@@ -158,7 +159,7 @@ def admin_dashboard():
 
     if request.method == 'POST':
         title = request.form['title']
-        url = request.form['url']
+        url = slugify(title)
         short_description = request.form['short_description']
         img_file = request.files.get('img_filename')
 
@@ -209,20 +210,39 @@ def admin_dashboard():
 
         return redirect(url_for('admin_dashboard'))
 
+
     services = Service.query.all()
     return render_template('admin/admin.html', title='Admin Dashboard', services=services)
 
-@app.route('/admin/delete/<url>')
+# Deleting Services
+@app.route('/admin/delete/<url>', methods=['POST'])
 def delete_service(url):
     if 'admin_id' not in session:
         return redirect(url_for('admin_login'))
 
-    service = Service.query.get_or_404(url)
-    db.session.delete(service)
-    db.session.commit()
-    flash("Service deleted successfully.", "info")
+    try:
+        service = Service.query.filter_by(url=url).first_or_404()
+        img_filename = service.img_filename
+        delete_path = os.path.join(app.config['UPLOAD_FOLDER'], img_filename)
+
+        db.session.delete(service)
+        db.session.commit()
+
+        if delete_path and os.path.exists(delete_path):
+            try:
+                os.remove(delete_path)
+            except Exception as file_error:
+                flash(f"Service deleted, but image file couldn't be removed: {file_error}", "warning")
+
+        flash("Service deleted successfully.", "success")
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error deleting service: {str(e)}", "danger")
+
     return redirect(url_for('admin_dashboard'))
 
+# Editing Services
 @app.route('/admin/edit/<url>', methods=['GET', 'POST'])
 def edit_service(url):
     if 'admin_id' not in session:
@@ -239,7 +259,165 @@ def edit_service(url):
 
     return render_template('edit_service.html', title='Edit Service', service=service)
 
+# Show content of Service Page
+@app.route('/admin/<service_url>', methods=['GET', 'POST'])
+def admin_service_data(service_url):
+    if 'admin_id' not in session:
+        return redirect(url_for('admin_login'))
+    service_data = ServiceDescription.query.filter_by(service_url=service_url).first()
+    img_service_data = ServiceImage.query.filter_by(description_id=service_data.id).all()
+    video_service_data = ServiceVideo.query.filter_by(description_id=service_data.id).all()
 
-   
+    return render_template('admin/admin_services.html', title='Service Data | Admin', service_data=service_data, img_service_data=img_service_data, video_service_data=video_service_data, len=len)
+
+
+# Update Title & Description of services
+@app.route('/admin/update_desc_service/<id>', methods=['POST'])
+def update_desc_service(id):
+    if 'admin_id' not in session:
+        return redirect(url_for('admin_login'))
+    
+    if request.method == 'POST':
+        title = request.form['title']
+        description = request.form['description']
+
+    try:
+        update_desc_service = ServiceDescription(id=id, title=title, description=description)
+        db.session.add(update_desc_service)
+        db.session.commit()
+        flash("Title & Description update successfully.", "success")
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Failed to save Title & Description: {str(e)}", "danger")
+
+    return redirect(request.referrer or url_for('admin_dashboard'))
+
+
+# Upload Services Images
+@app.route('/admin/upload_img_service/<description_id>', methods=['POST'])
+def upload_img_service(description_id):
+    if 'admin_id' not in session:
+        return redirect(url_for('admin_login'))
+    
+    if request.method == 'POST':
+        img_file = request.files.get('img_filename')
+
+    if not img_file or not allowed_file(img_file.filename):
+        flash("Valid image file required (jpg, jpeg, png, etc).", "danger")
+        return redirect(request.referrer or url_for('admin_dashboard'))
+        
+    # Handle image saving
+    filename = secure_filename(img_file.filename)
+    save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+    # Avoid overwriting
+    base, ext = os.path.splitext(filename)
+    count = 1
+    while os.path.exists(save_path):
+        filename = f"{base}_{count}{ext}"
+        save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        count += 1
+
+    try:
+        img_file.save(save_path)
+        
+        new_image = ServiceImage(description_id=description_id, img_filename=filename)
+        db.session.add(new_image)
+        db.session.commit()
+        flash("Image upload successfully.", "success")
+
+    except Exception as e:
+        os.remove(save_path)
+        db.session.rollback()
+        flash(f"Failed to save Image: {str(e)}", "danger")
+
+    return redirect(request.referrer or url_for('admin_dashboard'))
+
+
+# Deleting Service Imgages 
+@app.route('/admin/delete_img_service/<id>', methods=['POST'])
+def delete_img_service(id):
+    if 'admin_id' not in session:
+        return redirect(url_for('admin_login'))
+
+    try:
+        img_service_data = ServiceImage.query.filter_by(id=id).first()
+        img_filename = img_service_data.img_filename
+        delete_path = os.path.join(app.config['UPLOAD_FOLDER'], img_filename)
+
+        db.session.delete(img_service_data)
+        db.session.commit()
+
+        if delete_path and os.path.exists(delete_path):
+            try:
+                os.remove(delete_path)
+            except Exception as file_error:
+                flash(f"Image path deleted, but image file couldn't be removed: {file_error}", "warning")
+
+        flash("Image deleted successfully.", "success")
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error deleting service: {str(e)}", "danger")
+
+    return redirect(request.referrer or url_for('admin_dashboard'))
+
+
+# Upload Services Video
+@app.route('/admin/upload_video_service/<description_id>', methods=['POST'])
+def upload_video_service(description_id):
+    if 'admin_id' not in session:
+        return redirect(url_for('admin_login'))
+    
+    if request.method == 'POST':
+        yt_embed_link = request.form['yt_embed_link']
+
+    try:
+        new_video_link = ServiceVideo(description_id=description_id, yt_embed_link=yt_embed_link)
+        db.session.add(new_video_link)
+        db.session.commit()
+        flash("Video link upload successfully.", "success")
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Failed to save Video link: {str(e)}", "danger")
+
+    return redirect(request.referrer or url_for('admin_dashboard'))
+
+
+# Deleting Service Video 
+@app.route('/admin/delete_video_service/<id>', methods=['POST'])
+def delete_video_service(id):
+    if 'admin_id' not in session:
+        return redirect(url_for('admin_login'))
+
+    try:
+        video_service_data = ServiceVideo.query.filter_by(id=id).first()
+        video_filename = video_service_data.yt_embed_link
+        delete_path = os.path.join(app.config['UPLOAD_FOLDER'], video_filename)
+
+        db.session.delete(video_service_data)
+        db.session.commit()
+
+        if delete_path and os.path.exists(delete_path):
+            try:
+                os.remove(delete_path)
+            except Exception as file_error:
+                flash(f"Video path deleted, but Video file couldn't be removed: {file_error}", "warning")
+
+        flash("Video deleted successfully.", "success")
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error deleting service: {str(e)}", "danger")
+
+    return redirect(request.referrer or url_for('admin_dashboard'))
+
+
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
