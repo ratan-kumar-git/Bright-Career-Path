@@ -1,0 +1,150 @@
+{% extends 'admin/layout.html' %}
+{% block content %}
+
+<!-- Notification -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div id="alert-1" class="flex items-center px-4 py-3 mb-4 text-primarytext rounded-lg bg-primarybutton" role="alert">
+    <div class="ms-3 text-sm font-medium">
+        {{message}}
+    </div>
+    <button type="button"
+        class="ms-auto -mx-1.5 -my-1.5 text-white bg-secondary hover:bg-primarytext rounded-lg p-1.5 inline-flex items-center justify-center h-8 w-8"
+        data-dismiss-target="#alert-1" aria-label="Close">
+        ❌
+    </button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<!-- Add New Services -->
+<section>
+    <!-- Main modal -->
+    <div id="defaultModal" tabindex="-1" aria-hidden="true"
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
+        <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+            <!-- Modal content -->
+            <div class="relative p-4 bg-primary rounded-lg shadowsm:p-5">
+                <!-- Modal header -->
+                <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5">
+                    <h3 class="text-lg font-semibold text-primarytext">
+                        Add Service
+                    </h3>
+                    <button type="button"
+                        class="text-primarytext bg-transparent bg-primarybutton hover:text-white rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+                        data-modal-toggle="defaultModal">
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <form action="/admin" method="post" enctype="multipart/form-data">
+                    <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                        <div class="sm:col-span-2">
+                            <label for="Service Title" class="block mb-2 text-sm font-medium text-primarytext">Service
+                                Title</label>
+                            <input type="text" name="title" maxlength="100"
+                                class="bg-secondary border border-gray-300 text-primarytext text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                placeholder="Service Title" required="">
+                        </div>
+                        <div>
+                            <label for="Service Url" class="block mb-2 text-sm font-medium text-primarytext">Service
+                                Url (Allowed only a-z and underscore)</label>
+                            <input type="text" name="url" pattern="^[a-z_]+$"
+                                class="bg-secondary border border-gray-300 text-primarytext text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                placeholder="lms_solution" required="">
+                        </div>
+                        <div>
+                            <label for="file_input" class="block mb-2 text-sm font-medium text-primarytext">
+                                Upload file</label>
+                            <input
+                                class="block w-full text-sm text-primarytext border border-gray-300 rounded-lg cursor-pointer bg-secondary "
+                                id="file_input" name="img_filename" type="file">
+
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label for="short_description" class="block mb-2 text-sm font-medium text-primarytext">Short
+                                Description</label>
+                            <textarea rows="4" id="sas" name="short_description" maxlength="225"
+                                class="block p-2.5 w-full text-sm text-primarytext bg-secondary rounded-lg"
+                                placeholder="Write Service Description here"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit"
+                        class="text-primarytext hover:text-white inline-flex items-center bg-primarybutton font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                        <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        Add New Service
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Table for Update -->
+<section class="bg-primary mx-5 md:mx-10 max-w-full my-5 md:my-10 animate-fade-up">
+    <!-- Start coding here -->
+    <div class="bg-secondary text-primarytext relative shadow-md sm:rounded-lg overflow-hidden">
+        <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+            <!-- Modal toggle -->
+            <button id="defaultModalButton" data-modal-target="defaultModal" data-modal-toggle="defaultModal"
+                class="flex items-center justify-center text-primarytext bg-primarybutton hover:text-white focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                type="button">
+                <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true">
+                    <path clip-rule="evenodd" fill-rule="evenodd"
+                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                </svg>
+                Create product
+            </button>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-primarytext">
+                <thead class="text-xs text-white uppercase bg-primarytext">
+                    <tr>
+                        <th scope="col" class="px-4 py-3">Service Title</th>
+                        <th scope="col" class="px-4 py-3">Url</th>
+                        <th scope="col" class="px-4 py-3">Short Description</th>
+                        <th scope="col" class="px-4 py-3">Image Filename</th>
+                        <th scope="col" class="px-4 py-3">View</th>
+                        <th scope="col" class="px-4 py-3">Edit</th>
+                        <th scope="col" class="px-4 py-3">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in services %}
+                    <tr class="border-b">
+                        <th class="px-4 py-3 font-semibold text-primarytext hover:text-black whitespace-nowrap">
+                            {{service.title}}
+                        </th>
+                        <td class="px-4 py-3 font-semibold text-primarytext hover:text-black">{{service.url}}</td>
+                        <td class="px-4 py-3 font-semibold text-primarytext hover:text-black">{{
+                            service.short_description }}</td>
+                        <td class="px-4 py-3 font-semibold text-primarytext hover:text-black">{{service.img_filename}}
+                        </td>
+                        <td class="px-4 py-3 font-semibold text-primarytext hover:text-black"><i
+                                class="fa-solid fa-eye"></i></td>
+                        <td class="px-4 py-3 font-semibold text-primarytext hover:text-black"><i
+                                class="fa-solid fa-pen-to-square"></i></td>
+                        <td class="px-4 py-3 font-semibold text-primarytext hover:text-black"><i
+                                class="fa-solid fa-trash"></i></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

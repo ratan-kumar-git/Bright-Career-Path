@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/output.css')}}">
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body class="bg-primary min-h-screen">
+    <!-- Navbar -->
+    <nav id="navbar"
+        class="animate-fade-down p-4 m-5 max-w-[90%] mx-auto bg-secondary text-primarytext flex justify-between items-center rounded-full shadow-md z-40 relative">
+        <!-- Logo -->
+        <div class="text-base md:text-xl lg:text-2xl font-bold tracking-wide">
+            <a href="/">
+                <span class="text-primarybutton px-2 rounded-sm">Admin Panel</span>
+            </a>
+        </div>
+
+        <!-- LMS Button -->
+        <a href="/admin/logout"
+            class="text-white bg-primarytext px-6 py-2 rounded-full font-semibold hover:bg-orange-500 transition-colors duration-200">
+            logout
+        </a>
+    </nav>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+</body>
+
+
+</html>

@@ -1,6 +1,8 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for, session, redirect, flash, request
 from flask_sqlalchemy import SQLAlchemy
 import bcrypt
+from werkzeug.utils import secure_filename
+import os
 
 
 app = Flask(__name__)
@@ -10,6 +12,14 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///services.db'
 db = SQLAlchemy(app)
 
 app.secret_key = 'Bablu@12345'
+
+# Configuration
+app.config['UPLOAD_FOLDER'] = 'static/images'
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5MB max size
+
+def allowed_file(filename):
+    allowed_extensions = {'png', 'jpg', 'jpeg'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 # Admin Table
 class Admin(db.Model):
@@ -114,6 +124,121 @@ def about():
 @app.route('/contact')
 def contact():
     return render_template('contact.html', title='Contact')
+
+
+# Admin Login
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    # if not Admin.query.filter_by(email='admin').first():
+    #     admin_user = Admin(name='Admin', email='admin@gmail.com', password='admin@123')
+    #     db.session.add(admin_user)
+    #     db.session.commit()
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user = Admin.query.filter_by(email=email).first()
+        if user and user.check_password(password):
+            session['admin_id'] = user.id
+            return redirect(url_for('admin_dashboard'))
+        else:
+            flash("Invalid Credentials", "danger")
+    return render_template('admin/admin_login.html', title='Admin Login')
+
+# Admin Logout
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop('admin_id', None)
+    return redirect(url_for('admin_login'))
+
+# Admin Dashboard
+@app.route('/admin', methods=['GET', 'POST'])
+def admin_dashboard():
+    if 'admin_id' not in session:
+        return redirect(url_for('admin_login'))
+
+    if request.method == 'POST':
+        title = request.form['title']
+        url = request.form['url']
+        short_description = request.form['short_description']
+        img_file = request.files.get('img_filename')
+
+        # Validation
+        errors = []
+        if not title or len(title) > 100:
+            errors.append("Title is required and must be under 100 characters.")
+        if not url or not url.isidentifier():  # letters, numbers, underscores
+            errors.append("URL must contain only letters, digits, and underscores.")
+        if not short_description or len(short_description) > 500:
+            errors.append("Description is required and must be under 500 characters.")
+        if not img_file or not allowed_file(img_file.filename):
+            errors.append("Valid image file required (jpg, jpeg, png, etc).")
+
+        if errors:
+            for err in errors:
+                flash(err, "danger")
+            return redirect(url_for('admin_dashboard'))
+
+        # Handle image saving
+        filename = secure_filename(img_file.filename)
+        save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+        # Avoid overwriting
+        base, ext = os.path.splitext(filename)
+        count = 1
+        while os.path.exists(save_path):
+            filename = f"{base}_{count}{ext}"
+            save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            count += 1
+
+        try:
+            img_file.save(save_path)  # ✅ Save image first
+            new_service = Service(
+                url=url,
+                title=title,
+                short_description=short_description,
+                img_filename=filename
+            )
+            db.session.add(new_service)
+            db.session.commit()
+            flash("Service added successfully.", "success")
+
+        except Exception as e:
+            os.remove(save_path)
+            db.session.rollback()
+            flash(f"Failed to save service: {str(e)}", "danger")
+
+        return redirect(url_for('admin_dashboard'))
+
+    services = Service.query.all()
+    return render_template('admin/admin.html', title='Admin Dashboard', services=services)
+
+@app.route('/admin/delete/<url>')
+def delete_service(url):
+    if 'admin_id' not in session:
+        return redirect(url_for('admin_login'))
+
+    service = Service.query.get_or_404(url)
+    db.session.delete(service)
+    db.session.commit()
+    flash("Service deleted successfully.", "info")
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin/edit/<url>', methods=['GET', 'POST'])
+def edit_service(url):
+    if 'admin_id' not in session:
+        return redirect(url_for('admin_login'))
+
+    service = Service.query.get_or_404(url)
+    if request.method == 'POST':
+        service.title = request.form['title']
+        service.short_description = request.form['short_description']
+        service.img_filename = request.form['img_filename']
+        db.session.commit()
+        flash("Service updated successfully.", "success")
+        return redirect(url_for('admin_dashboard'))
+
+    return render_template('edit_service.html', title='Edit Service', service=service)
+
 
    
 if __name__ == '__main__':
