@@ -169,10 +169,11 @@ def admin_dashboard():
             errors.append("Title is required and must be under 100 characters.")
         if not url or not url.isidentifier():  # letters, numbers, underscores
             errors.append("URL must contain only letters, digits, and underscores.")
-        if not short_description or len(short_description) > 500:
-            errors.append("Description is required and must be under 500 characters.")
         if not img_file or not allowed_file(img_file.filename):
             errors.append("Valid image file required (jpg, jpeg, png, etc).")
+        if not short_description or len(short_description) > 500:
+            errors.append("Description is required and must be under 500 characters.")
+        
 
         if errors:
             for err in errors:
@@ -199,7 +200,13 @@ def admin_dashboard():
                 short_description=short_description,
                 img_filename=filename
             )
+            new_service_describe = ServiceDescription(
+                service_url=url,
+                title=title,
+                description=short_description
+            )
             db.session.add(new_service)
+            db.session.add(new_service_describe)
             db.session.commit()
             flash("Service added successfully.", "success")
 
@@ -222,14 +229,28 @@ def delete_service(url):
 
     try:
         service = Service.query.filter_by(url=url).first_or_404()
+        service_data = ServiceDescription.query.filter_by(service_url=service.url).first()
+        img_service_data = ServiceImage.query.filter_by(description_id=service_data.id).all()
+
+        # Services Image
         img_filename = service.img_filename
         delete_path = os.path.join(app.config['UPLOAD_FOLDER'], img_filename)
+
+        # All Images inside service
+        inside_img_filename = []
+        if img_service_data:
+            for img_file in img_service_data:
+                delete_inside_path = os.path.join(app.config['UPLOAD_FOLDER'], img_file.img_filename)
+                inside_img_filename.append(delete_inside_path)
 
         db.session.delete(service)
         db.session.commit()
 
         if delete_path and os.path.exists(delete_path):
             try:
+                if delete_inside_path and os.path.exists(delete_inside_path):
+                    for delete_inside_path in inside_img_filename:
+                        os.remove(delete_inside_path)
                 os.remove(delete_path)
             except Exception as file_error:
                 flash(f"Service deleted, but image file couldn't be removed: {file_error}", "warning")
@@ -270,10 +291,9 @@ def admin_service_data(service_url):
 
     return render_template('admin/admin_services.html', title='Service Data | Admin', service_data=service_data, img_service_data=img_service_data, video_service_data=video_service_data, len=len)
 
-
 # Update Title & Description of services
-@app.route('/admin/update_desc_service/<id>', methods=['POST'])
-def update_desc_service(id):
+@app.route('/admin/update_desc_service/<url>', methods=['POST'])
+def update_desc_service(url):
     if 'admin_id' not in session:
         return redirect(url_for('admin_login'))
     
@@ -282,8 +302,10 @@ def update_desc_service(id):
         description = request.form['description']
 
     try:
-        update_desc_service = ServiceDescription(id=id, title=title, description=description)
-        db.session.add(update_desc_service)
+        update_desc_service = ServiceDescription.query.filter_by(service_url=url).first()
+        update_desc_service.title=title
+        update_desc_service.description=description
+
         db.session.commit()
         flash("Title & Description update successfully.", "success")
 
@@ -292,7 +314,6 @@ def update_desc_service(id):
         flash(f"Failed to save Title & Description: {str(e)}", "danger")
 
     return redirect(request.referrer or url_for('admin_dashboard'))
-
 
 # Upload Services Images
 @app.route('/admin/upload_img_service/<description_id>', methods=['POST'])
@@ -334,7 +355,6 @@ def upload_img_service(description_id):
 
     return redirect(request.referrer or url_for('admin_dashboard'))
 
-
 # Deleting Service Imgages 
 @app.route('/admin/delete_img_service/<id>', methods=['POST'])
 def delete_img_service(id):
@@ -363,7 +383,6 @@ def delete_img_service(id):
 
     return redirect(request.referrer or url_for('admin_dashboard'))
 
-
 # Upload Services Video
 @app.route('/admin/upload_video_service/<description_id>', methods=['POST'])
 def upload_video_service(description_id):
@@ -384,7 +403,6 @@ def upload_video_service(description_id):
         flash(f"Failed to save Video link: {str(e)}", "danger")
 
     return redirect(request.referrer or url_for('admin_dashboard'))
-
 
 # Deleting Service Video 
 @app.route('/admin/delete_video_service/<id>', methods=['POST'])
@@ -413,10 +431,6 @@ def delete_video_service(id):
         flash(f"Error deleting service: {str(e)}", "danger")
 
     return redirect(request.referrer or url_for('admin_dashboard'))
-
-
-
-
 
 
 if __name__ == '__main__':

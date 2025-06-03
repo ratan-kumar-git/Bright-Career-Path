@@ -9,7 +9,7 @@
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% if messages %}
 {% for category, message in messages %}
-<div id="alert-1" class="mx-5 md:mx-10 flex items-center px-4 py-3 mb-4 text-primarytext rounded-lg bg-primarybutton"
+<div id="alert-1" class="mx-5 md:mx-14 flex items-center px-4 py-3 mb-4 text-primarytext rounded-lg bg-primarybutton"
     role="alert">
     <div class="ms-3 text-sm font-medium">
         {{message}}
@@ -27,7 +27,7 @@
 <!-- Update Title & Description of Services  -->
 <section class="bg-primary mx-auto md:mx-5 max-w-full mb-10 animate-fade-up">
     <div class="px-5 md:px-10 grid grid-cols-1 gap-10">
-        <form action="{{ url_for('update_desc_service', id=service_data.id) }}" method="post">
+        <form action="{{ url_for('update_desc_service', url=service_data.service_url) }}" method="post">
             <div class="mt-4">
                 <label for="Service Title" class="block mb-2 text-sm font-medium text-primarytext">Service
                     Title</label>
@@ -101,7 +101,7 @@
             {% for img in img_service_data %}
             <div>
                 <img class="hover:animate-fade-up h-auto max-w-full rounded-lg"
-                    src="{{ url_for('static', filename=img.img_filename) }}" alt="image">
+                    src="{{ url_for('static', filename='images/' ~ img.img_filename) }}" alt="image">
 
                 <div class="mx-auto my-2 flex justify-center items-center">
                     <form action="{{ url_for('delete_img_service', id=img.id) }}" method="POST">
