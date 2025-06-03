@@ -894,6 +894,10 @@ video {
   width: 2.25rem;
 }
 
+.w-\[500px\] {
+  width: 500px;
+}
+
 .w-full {
   width: 100%;
 }
@@ -1451,6 +1455,11 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.text-red {
+  --tw-text-opacity: 1;
+  color: rgb(255 0 0 / var(--tw-text-opacity, 1));
 }
 
 .shadow-lg {

@@ -76,6 +76,13 @@ class ServiceVideo(db.Model):
     description_id = db.Column(db.Integer, db.ForeignKey('service_description.id'), nullable=False)
     yt_embed_link = db.Column(db.String(500), nullable=False)
 
+# Contact Us Table
+class Contact(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    number = db.Column(db.String(100), nullable=False)
+    message = db.Column(db.String(500), nullable=False)
 
 with app.app_context():
     db.create_all()
@@ -122,18 +129,24 @@ def about():
 
 
 # Contact Page
-@app.route('/contact')
+@app.route('/contact', methods=['POST','GET'])
 def contact():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        number = request.form['number']
+        message = request.form['message']
+
+        new_data = Contact(name=name, email=email, number=number, message=message)
+        db.session.add(new_data)
+        db.session.commit()    
+        flash('Message Send Successful.', 'success')
     return render_template('contact.html', title='Contact')
 
 
 # Admin Login
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
-    # if not Admin.query.filter_by(email='admin').first():
-    #     admin_user = Admin(name='Admin', email='admin@gmail.com', password='admin@123')
-    #     db.session.add(admin_user)
-    #     db.session.commit()
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -219,7 +232,8 @@ def admin_dashboard():
 
 
     services = Service.query.all()
-    return render_template('admin/admin.html', title='Admin Dashboard', services=services)
+    contacts = Contact.query.all()
+    return render_template('admin/admin.html', title='Admin Dashboard', services=services, contacts=contacts)
 
 # Deleting Services
 @app.route('/admin/delete/<url>', methods=['POST'])
@@ -236,21 +250,21 @@ def delete_service(url):
         img_filename = service.img_filename
         delete_path = os.path.join(app.config['UPLOAD_FOLDER'], img_filename)
 
-        # All Images inside service
-        inside_img_filename = []
-        if img_service_data:
-            for img_file in img_service_data:
-                delete_inside_path = os.path.join(app.config['UPLOAD_FOLDER'], img_file.img_filename)
-                inside_img_filename.append(delete_inside_path)
-
         db.session.delete(service)
         db.session.commit()
 
         if delete_path and os.path.exists(delete_path):
             try:
-                if delete_inside_path and os.path.exists(delete_inside_path):
-                    for delete_inside_path in inside_img_filename:
-                        os.remove(delete_inside_path)
+                # All Images inside service
+                inside_img_filename = []
+                if img_service_data:
+                    for img_file in img_service_data:
+                        delete_inside_path = os.path.join(app.config['UPLOAD_FOLDER'], img_file.img_filename)
+                        inside_img_filename.append(delete_inside_path)
+
+                    if delete_inside_path and os.path.exists(delete_inside_path):
+                        for inside_path in inside_img_filename:
+                            os.remove(inside_path)
                 os.remove(delete_path)
             except Exception as file_error:
                 flash(f"Service deleted, but image file couldn't be removed: {file_error}", "warning")
@@ -269,16 +283,73 @@ def edit_service(url):
     if 'admin_id' not in session:
         return redirect(url_for('admin_login'))
 
-    service = Service.query.get_or_404(url)
+    service = Service.query.filter_by(url=url).first()
+    
     if request.method == 'POST':
-        service.title = request.form['title']
-        service.short_description = request.form['short_description']
-        service.img_filename = request.form['img_filename']
-        db.session.commit()
-        flash("Service updated successfully.", "success")
-        return redirect(url_for('admin_dashboard'))
+        # if image not send then run this 
+        if not request.files.get('img_filename'):
+            service.title = request.form['title']
+            service.short_description = request.form['short_description']
 
-    return render_template('edit_service.html', title='Edit Service', service=service)
+            db.session.commit()
+            flash("Service updated successfully.", "success")
+            return redirect(url_for('admin_dashboard'))
+        
+
+        # when image found then run this
+        title = request.form['title']
+        short_description = request.form['short_description']
+        img_file = request.files.get('img_filename')
+
+        # Validation
+        errors = []
+        if not title or len(title) > 100:
+            errors.append("Title is required and must be under 100 characters.")
+        if not img_file or not allowed_file(img_file.filename):
+            errors.append("Valid image file required (jpg, jpeg, png, etc).")
+        if not short_description or len(short_description) > 500:
+            errors.append("Description is required and must be under 500 characters.")
+
+        if errors:
+            for err in errors:
+                flash(err, "danger")
+            return redirect(request.referrer or url_for('admin_dashboard'))
+
+        # Handle image saving
+        filename = secure_filename(img_file.filename)
+        save_img_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        delete_img_path = os.path.join(app.config['UPLOAD_FOLDER'], service.img_filename)
+
+        # Avoid overwriting
+        base, ext = os.path.splitext(filename)
+        count = 1
+        while os.path.exists(save_img_path):
+            filename = f"{base}_{count}{ext}"
+            save_img_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            count += 1
+
+        try:
+            img_file.save(save_img_path) #save new img
+
+            #delete old img if save new img
+            if os.path.exists(delete_img_path):
+                os.remove(delete_img_path) 
+
+            # Update database
+            service.title = title
+            service.short_description = short_description
+            service.img_filename = filename
+            db.session.commit()
+            flash("Service Update successfully.", "success")
+
+        except Exception as e:
+            if os.path.exists(save_img_path):
+                os.remove(save_img_path)
+            db.session.rollback()
+            flash(f"Failed to Update service: {str(e)}", "danger")
+
+
+    return render_template('admin/edit_service.html', title='Edit Service', service=service)
 
 # Show content of Service Page
 @app.route('/admin/<service_url>', methods=['GET', 'POST'])
@@ -432,6 +503,18 @@ def delete_video_service(id):
 
     return redirect(request.referrer or url_for('admin_dashboard'))
 
+# Delete contact us message
+@app.route('/admin/delete_contact/<id>', methods=['POST'])
+def delete_contact(id):
+    if 'admin_id' not in session:
+        return redirect(url_for('admin_login'))
+    contact = Contact.query.filter_by(id=id).first()
+    db.session.delete(contact)
+    db.session.commit()
+    flash('Contact us message deleted successfully', "success")
+
+    return redirect(url_for('admin_dashboard'))
+
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
