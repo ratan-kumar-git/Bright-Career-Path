@@ -28,7 +28,7 @@
             {% if len(services_page_img) >= 1 %}
                 {% for img in services_page_img %}
                 <div>
-                    <img class="hover:animate-fade-up h-auto max-w-full rounded-lg" src="{{ url_for('static', filename=img.img_filename) }}"
+                    <img class="hover:animate-fade-up h-auto max-w-full rounded-lg" src="{{ url_for('static', filename='images/' ~ img.img_filename) }}"
                         alt="">
                 </div>
                 {% endfor %}
