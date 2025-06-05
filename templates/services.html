@@ -2,7 +2,8 @@
 {% block content %}
 <!-- Our Servises -->
 <section class="bg-primary mx-auto md:mx-5 max-w-full mb-10 animate-fade-up">
-    <h1 class="animate-bounce animate-infinite text-center text-3xl md:text-4xl lg:text-5xl py-10 font-serif font-extrabold">Our Services</h1>
+    <h1 class="animate-bounce animate-infinite text-2xl md:text-3xl font-bold text-center text-primarybutton mb-8">
+        Our Services</h1>
     <div class="flex justify-center items-center animate-fade-up animate-delay-500">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-10 px-5">
             <!-- Card Start -->
@@ -11,7 +12,8 @@
             <div
                 class="hover:animate-fade-up hover:animate-delay-400 max-w-sm bg-secondary border border-primarytext rounded-lg shadow-xl">
                 <a href="#">
-                    <img class="rounded-t-lg" src="{{ url_for('static', filename='images/' ~ service.img_filename) }}" alt="image" />
+                    <img class="rounded-t-lg" src="{{ url_for('static', filename='images/' ~ service.img_filename) }}"
+                        alt="image" />
                 </a>
                 <div class="p-5">
                     <a href="#">
@@ -31,7 +33,9 @@
             </div>
             {% endfor %}
             {% else %}
-                <h1 class="col-span-3 animate-pulse animate-infinite text-center text-xl md:text-2xl lg:text-3xl py-10 font-mono">Data Not Found</h1>
+            <h1
+                class="col-span-3 animate-pulse animate-infinite text-center text-xl md:text-2xl lg:text-3xl py-10 font-mono">
+                Data Not Found</h1>
             {% endif %}
         </div>
     </div>

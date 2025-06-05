@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
     <link rel="stylesheet" href="{{url_for('static', filename='css/output.css')}}">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -23,11 +24,14 @@
         </button>
 
         <!-- Logo -->
-        <div class="text-base md:text-xl lg:text-2xl font-bold tracking-wide">
-            <a href="/">
+        <div class="text-base md:text-xl lg:text-2xl font-extrabold tracking-wide flex items-center gap-2">
+            <a href="/" class="flex items-center">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo"
+                    class="h-8 w-auto md:h-10 lg:h-12 object-contain rounded-full" />
                 <span class="text-primarybutton px-2 rounded-sm">Bright Career Path</span>
             </a>
         </div>
+
 
         <!-- Desktop Menu -->
         <div class="hidden lg:flex items-center">
@@ -48,7 +52,7 @@
         </div>
 
         <!-- LMS Button -->
-        <a href="#"
+        <a href="https://www.lms.imaginarywindow.in/" target="_blank"
             class="text-white bg-primarytext px-6 py-2 rounded-full font-semibold hover:bg-orange-500 transition-colors duration-200">
             LMS
         </a>
@@ -85,7 +89,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-black text-white px-6 py-12">
+    <footer class="bg-black text-white px-6 py-12 animate-fade-down">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
 
             <!-- Logo + Description -->
@@ -120,19 +124,27 @@
                 <p class="text-gray-300"><strong>Head Office Address:</strong> Mohaddiganj, Sasaram, Rohtas, Bihar</p>
                 <p class="text-gray-300"><strong>Branch Office Address:</strong> Vijay Nagar, Indore, Madhya Pradesh</p>
                 <p class="text-gray-300"><strong>Call:</strong> +91 7870767779</p>
-                <p class="text-gray-300"><strong>Email:</strong> omtusharsingh78@gmail.com</p>
-                <div class="flex space-x-4 mt-3 text-xl">
-                    <a href="#" class="text-blue-500"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="text-pink-500"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="text-red-600"><i class="fab fa-youtube"></i></a>
+                <p class="text-gray-300"><strong>Email:</strong>brightcareerpath91@gmail.com</p>
+                <div class="flex mt-3 text-xl">
+                    <a href="https://www.facebook.com/share/1EeywqEgkW/" target="_blank" class="text-blue-500 mr-3"><i
+                            class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/brightcareerpath" target="_blank" class="text-pink-500 mr-3"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="#" target="_blank" class="text-red-600 mr-3"><i class="fab fa-youtube"></i></a>
+                    <a href="https://x.com/Brightcareer91" target="_blank" rel="noopener noreferrer"
+                        class="text-white mr-3" aria-label="Visit Bright Career on X (formerly Twitter)">
+                        <img src="{{ url_for('static', filename='images/square-threads-brands.svg') }}"
+                            alt="Bright Career on X" class="h-6 w-6 bg-white rounded-md p-0">
+                    </a>
                 </div>
             </div>
         </div>
 
         <!-- Bottom Strip -->
         <div class="mt-10 border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
-            © 2025 <span class="text-cyan-400">Bright Career Path</span>. Designed by <span
-                class="text-green-400">Sandeep Kumar</span>. All Rights Reserved.
+            © 2025 <span class="text-cyan-400">Bright Career Path</span>. Designed by <span class="text-green">Ratan
+                Kumar</span>. All Rights
+            Reserved.
         </div>
 
         <!-- Back to Top Button -->

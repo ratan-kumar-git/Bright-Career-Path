@@ -36,16 +36,19 @@
 
 <!-- Our Servises -->
 <section class="bg-primary mx-auto md:mx-5 max-w-full mb-10 animate-fade-up">
-    <h1 class="animate-bounce animate-infinite text-center text-3xl md:text-4xl lg:text-5xl py-10 font-serif font-extrabold">Our Services</h1>
+    <h1
+        class="animate-bounce animate-infinite text-2xl md:text-3xl font-bold text-center text-primarybutton mb-8">
+        Our Services</h1>
     <div class="flex justify-center items-center animate-fade-up animate-delay-500">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-10 px-5">
             <!-- Card Start -->
-             {% if len(services) >= 1 %}
+            {% if len(services) >= 1 %}
             {% for service in services %}
             <div
                 class="hover:animate-fade-up hover:animate-delay-400 max-w-sm bg-secondary border border-primarytext rounded-lg shadow-xl">
                 <a href="#">
-                    <img class="rounded-t-lg" src="{{ url_for('static', filename='images/' ~ service.img_filename) }}" alt="" />
+                    <img class="rounded-t-lg" src="{{ url_for('static', filename='images/' ~ service.img_filename) }}"
+                        alt="" />
                 </a>
                 <div class="p-5">
                     <a href="#">
@@ -64,9 +67,84 @@
             </div>
             {% endfor %}
             {% else %}
-                <h1 class="col-span-3 animate-pulse animate-infinite text-center text-xl md:text-2xl lg:text-3xl py-10 font-mono">Data Not Found</h1>
+            <h1
+                class="col-span-3 animate-pulse animate-infinite text-center text-xl md:text-2xl lg:text-3xl py-10 font-mono">
+                Data Not Found</h1>
             {% endif %}
         </div>
     </div>
 </section>
+
+<!-- Customer reviews -->
+<section class="bg-primary py-10 px-5 mx-auto md:mx-5 animate-fade-up">
+    <h2 class="animate-bounce animate-infinite text-2xl md:text-3xl font-bold text-center text-primarybutton mb-8">What Our Partners Say</h2>
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+
+        <!-- LMS Solutions -->
+        <div class="bg-secondary p-6 rounded-xl shadow-lg">
+            <p class="text-gray-700 italic">"Our school now runs seamlessly with the LMS provided by Bright Career Path.
+                Managing students, tracking performance, and sharing content has never been easier!"</p>
+            <h4 class="mt-4 font-semibold text-primarybutton">LMS Solutions</h4>
+        </div>
+
+        <!-- Digital Marketing -->
+        <div class="bg-secondary p-6 rounded-xl shadow-lg">
+            <p class="text-gray-700 italic">"Thanks to their digital marketing team, our college has seen a major boost
+                in online engagement. From SEO to social media, everything is handled professionally."</p>
+            <h4 class="mt-4 font-semibold text-primarybutton">Digital Marketing</h4>
+        </div>
+
+        <!-- Photography & Videography -->
+        <div class="bg-secondary p-6 rounded-xl shadow-lg">
+            <p class="text-gray-700 italic">"They captured our annual day beautifully. The photography and video quality
+                were outstanding, and it really helped in our promotions."</p>
+            <h4 class="mt-4 font-semibold text-primarybutton">Photography & Videography</h4>
+        </div>
+
+        <!-- Career Counselling -->
+        <div class="bg-secondary p-6 rounded-xl shadow-lg">
+            <p class="text-gray-700 italic">"Their expert career counselling gave our students a clear direction after
+                10th and 12th. Parents were extremely satisfied."</p>
+            <h4 class="mt-4 font-semibold text-primarybutton">Career Counselling</h4>
+        </div>
+
+        <!-- Placement Support -->
+        <div class="bg-secondary p-6 rounded-xl shadow-lg">
+            <p class="text-gray-700 italic">"Our students got placed in reputed private companies. Their network and
+                placement support truly makes a difference."</p>
+            <h4 class="mt-4 font-semibold text-primarybutton">Placement Support</h4>
+        </div>
+
+        <!-- Smart Class Infrastructure -->
+        <div class="bg-secondary p-6 rounded-xl shadow-lg">
+            <p class="text-gray-700 italic">"Classroom engagement has increased tremendously since we installed their
+                smart class setup. The integration with LMS is flawless."</p>
+            <h4 class="mt-4 font-semibold text-primarybutton">Smart Class Infrastructure</h4>
+        </div>
+
+        <!-- Animation -->
+        <div class="bg-secondary p-6 rounded-xl shadow-lg">
+            <p class="text-gray-700 italic">"Students loved the animation course! It opened their minds to new creative
+                careers, and they learned real industry tools."</p>
+            <h4 class="mt-4 font-semibold text-primarybutton">Animation</h4>
+        </div>
+
+        <!-- Summer & Winter Camps -->
+        <div class="bg-secondary p-6 rounded-xl shadow-lg">
+            <p class="text-gray-700 italic">"The seasonal camps were a huge hit. Kids enjoyed learning new things and
+                parents appreciated the mix of fun and skills."</p>
+            <h4 class="mt-4 font-semibold text-primarybutton">Summer & Winter Camps</h4>
+        </div>
+
+        <!-- Creative & Extracurricular -->
+        <div class="bg-secondary p-6 rounded-xl shadow-lg">
+            <p class="text-gray-700 italic">"Our school’s extracurricular activities have improved drastically. Their
+                art, music, and drama programs are a perfect balance to academics."</p>
+            <h4 class="mt-4 font-semibold text-primarybutton">Creative & Extracurricular</h4>
+        </div>
+
+    </div>
+</section>
+
+
 {% endblock %}
