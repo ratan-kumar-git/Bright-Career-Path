@@ -144,6 +144,11 @@ def contact():
     return render_template('contact.html', title='Contact')
 
 
+# Policy Page
+@app.route('/policy')
+def policy():
+    return render_template('policy.html', title='Policy')
+
 # Admin Login
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
