@@ -15,11 +15,12 @@ db = SQLAlchemy(app)
 app.secret_key = 'Bablu@12345'
 
 # Configuration
+# app.config['UPLOAD_FOLDER'] = '/home/brightcareerpath/Bright-Career-Path/static/images'
 app.config['UPLOAD_FOLDER'] = 'static/images'
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5MB max size
 
 def allowed_file(filename):
-    allowed_extensions = {'png', 'jpg', 'jpeg'}
+    allowed_extensions = {'webp'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 def slugify(text):
@@ -188,7 +189,7 @@ def admin_dashboard():
         if not url or not url.isidentifier():  # letters, numbers, underscores
             errors.append("URL must contain only letters, digits, and underscores.")
         if not img_file or not allowed_file(img_file.filename):
-            errors.append("Valid image file required (jpg, jpeg, png, etc).")
+            errors.append("Valid image file required (webp).")
         if not short_description or len(short_description) > 500:
             errors.append("Description is required and must be under 500 characters.")
         
@@ -311,7 +312,7 @@ def edit_service(url):
         if not title or len(title) > 100:
             errors.append("Title is required and must be under 100 characters.")
         if not img_file or not allowed_file(img_file.filename):
-            errors.append("Valid image file required (jpg, jpeg, png, etc).")
+            errors.append("Valid image file required (webp).")
         if not short_description or len(short_description) > 500:
             errors.append("Description is required and must be under 500 characters.")
 
@@ -401,7 +402,7 @@ def upload_img_service(description_id):
         img_file = request.files.get('img_filename')
 
     if not img_file or not allowed_file(img_file.filename):
-        flash("Valid image file required (jpg, jpeg, png, etc).", "danger")
+        flash("Valid image file required (webp).", "danger")
         return redirect(request.referrer or url_for('admin_dashboard'))
         
     # Handle image saving
